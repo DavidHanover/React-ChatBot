@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"node server.js\" \"npm start --prefix react-bot-client\""
   },
   "keywords": [],
   "author": "",
@@ -17,5 +18,8 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
     "pusher": "^2.2.2"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.1"
   }
 }

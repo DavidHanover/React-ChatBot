@@ -38,7 +38,6 @@ const processMessage = message => {
   sessionClient
     .detectIntent(request)
     .then(responses => {
-      console.log(responses);
       const result = responses[0].queryResult;
       return pusher.trigger("bot", "bot-response", {
         message: result.fulfillmentText

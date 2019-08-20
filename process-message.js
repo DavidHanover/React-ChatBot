@@ -1,5 +1,6 @@
 const Dialogflow = require("dialogflow");
 const Pusher = require("pusher");
+const getWeatherInfo = require("./weather");
 
 const projectID = "firstchatbox-pbofsu";
 const sessionID = "123456";
@@ -39,6 +40,30 @@ const processMessage = message => {
     .detectIntent(request)
     .then(responses => {
       const result = responses[0].queryResult;
+
+      // If the intent matches 'detect-city'
+      if (result.intent.displayName === "detect-city") {
+        const city = result.parameters.fields["geo-city"].stringValue;
+
+        // fetch the temperature from openweather map
+        return getWeatherInfo(city).then(weather => {
+          if (!weather) {
+            return pusher.trigger("bot", "bot-response", {
+              message:
+                "I'm so sorry! There appears to have been an error.  Please try again!"
+            });
+          }
+          console.dir(weather);
+          return pusher.trigger("bot", "bot-response", {
+            message: `The weather conditions in ${city} are ${
+              weather.desc
+            }, & the temperature is ${weather.temp}°F with ${
+              weather.speed
+            } mph winds & ${weather.humidity}% humidity.`
+          });
+        });
+      }
+
       return pusher.trigger("bot", "bot-response", {
         message: result.fulfillmentText
       });
@@ -47,5 +72,4 @@ const processMessage = message => {
       console.error("ERROR:", err);
     });
 };
-
 module.exports = processMessage;

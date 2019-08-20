@@ -17,6 +17,10 @@ app.post("/chat", (req, res) => {
   res.send();
 });
 
+app.get("/chat", (req, res) => {
+  res.send({ key: process.env.PUSHER_APP_KEY });
+});
+
 app.set("port", process.env.PORT || 5000);
 const server = app.listen(app.get("port"), () => {
   console.log(`Express running → PORT ${server.address().port}`);
